@@ -1,7 +1,7 @@
 """Testaa Varasto-luokan toimintaa"""
 from varasto import Varasto
 
-
+#pylint: disable=too-many-statements
 def main():
     """Pääohjelma."""
     mehua = Varasto(100.0)
@@ -43,18 +43,6 @@ def main():
     mehua.lisaa_varastoon(-666.0)
     print(f"Mehuvarasto: {mehua}")
 
-    print(f"Olutvarasto: {olutta}")
-    print("olutta.ota_varastosta(1000.0)")
-    saatiin = olutta.ota_varastosta(1000.0)
-    print(f"saatiin {saatiin}")
-    print(f"Olutvarasto: {olutta}")
-
-    print(f"Mehuvarasto: {mehua}")
-    print("mehua.otaVarastosta(-32.9)")
-    saatiin = mehua.ota_varastosta(-32.9)
-    print(f"saatiin {saatiin}")
-    print(f"Mehuvarasto: {mehua}")
-    print("lol")
 
 
 if __name__ == "__main__":

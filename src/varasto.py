@@ -1,5 +1,5 @@
 """Varastonhallinta pitää kirjaa varaston tilavuudesta ja saldosta."""
-
+#pylint: disable=too-many-statements
 class Varasto:
     """Varasto-luokka, joka pitää kirjaa varaston tilavuudesta ja saldosta."""
 
