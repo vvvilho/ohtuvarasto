@@ -18,6 +18,9 @@ jobs:
         run: uv sync
       - name: Run tests
         run: uv run coverage run --branch -m pytest
+
+      - name: Run Pylint
+        run: uv run pylint $(git ls-files '*.py')
         
       - name: Coverage report
         run: uv run coverage xml
