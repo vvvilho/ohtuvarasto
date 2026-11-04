@@ -1,7 +1,9 @@
+"""Testaa Varasto-luokan toimintaa"""
 from varasto import Varasto
 
 
 def main():
+    """Pääohjelma."""
     mehua = Varasto(100.0)
     olutta = Varasto(100.0, 20.2)
 
