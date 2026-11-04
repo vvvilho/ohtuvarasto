@@ -86,5 +86,4 @@ class TestVarasto(unittest.TestCase):
     def test_string_esitys(self):
         """Testataan string-esitys."""
         self.varasto.lisaa_varastoon(6)
-
         self.assertAlmostEqual((str(self.varasto)), "saldo = 6, vielä tilaa 4")
