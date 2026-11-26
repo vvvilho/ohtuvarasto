@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Warehouse manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-header">
+        <p class="eyebrow">Inventory management</p>
+        <h1>Warehouse manager</h1>
+        <p class="intro">Create warehouses and keep track of what is in storage.</p>
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <section class="messages" aria-live="polite" aria-label="Updates">
+            {% for category, message in messages %}
+              <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+          </section>
+        {% endif %}
+      {% endwith %}
+
+      <section class="panel create-panel" aria-labelledby="create-heading">
+        <div>
+          <p class="eyebrow">Get started</p>
+          <h2 id="create-heading">Create a warehouse</h2>
+        </div>
+        <form action="{{ url_for('create_warehouse') }}" method="post" class="create-form">
+          <label>
+            Warehouse name
+            <input type="text" name="name" maxlength="100" required placeholder="e.g. Main storage">
+          </label>
+          <label>
+            Capacity
+            <input type="number" name="capacity" min="0.01" step="any" required placeholder="100">
+          </label>
+          <button type="submit">Create warehouse</button>
+        </form>
+      </section>
+
+      <section class="warehouse-section" aria-labelledby="warehouses-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2 id="warehouses-heading">Your warehouses</h2>
+          </div>
+          <span class="count">{{ warehouses|length }} total</span>
+        </div>
+
+        {% if warehouses %}
+          <div class="warehouse-grid">
+            {% for warehouse in warehouses %}
+              {% set inventory = warehouse.inventory %}
+              {% set percent_full = (inventory.saldo / inventory.tilavuus * 100) if inventory.tilavuus else 0 %}
+              <article class="panel warehouse-card">
+                <div class="warehouse-title">
+                  <div>
+                    <p class="eyebrow">Warehouse {{ warehouse.id }}</p>
+                    <h3>{{ warehouse.name }}</h3>
+                  </div>
+                  <span class="balance">{{ inventory.saldo|round(2) }} <small>items</small></span>
+                </div>
+                <div class="capacity-label">
+                  <span>Storage used</span>
+                  <span>{{ percent_full|round(0)|int }}%</span>
+                </div>
+                <div class="progress" role="progressbar" aria-label="{{ warehouse.name }} capacity used" aria-valuenow="{{ percent_full|round(0)|int }}" aria-valuemin="0" aria-valuemax="100">
+                  <span style="width: {{ percent_full }}%"></span>
+                </div>
+                <p class="capacity-detail">{{ inventory.paljonko_mahtuu()|round(2) }} available of {{ inventory.tilavuus|round(2) }}</p>
+                <div class="actions">
+                  <form action="{{ url_for('add_items', warehouse_id=warehouse.id) }}" method="post">
+                    <label>
+                      Add items
+                      <span class="input-action">
+                        <input type="number" name="quantity" min="0.01" step="any" required aria-label="Quantity to add to {{ warehouse.name }}">
+                        <button type="submit">Add</button>
+                      </span>
+                    </label>
+                  </form>
+                  <form action="{{ url_for('take_items', warehouse_id=warehouse.id) }}" method="post">
+                    <label>
+                      Take items
+                      <span class="input-action">
+                        <input type="number" name="quantity" min="0.01" step="any" required aria-label="Quantity to take from {{ warehouse.name }}">
+                        <button type="submit" class="secondary-button">Take</button>
+                      </span>
+                    </label>
+                  </form>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="panel empty-state">
+            <span class="empty-icon" aria-hidden="true">＋</span>
+            <h3>No warehouses yet</h3>
+            <p>Create your first warehouse above to start tracking inventory.</p>
+          </div>
+        {% endif %}
+      </section>
+      <footer>Warehouse Manager <span>·</span> Inventory at a glance</footer>
+    </main>
+  </body>
+</html>
